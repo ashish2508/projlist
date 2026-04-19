@@ -138,6 +138,14 @@
 .error {
   color: #be2e2e;
   margin: 0;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.error a {
+  color: #1d8d71;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  text-decoration: underline;
 }
 
 .sidebar {

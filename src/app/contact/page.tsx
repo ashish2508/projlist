@@ -20,6 +20,7 @@ const socialLinks = [
 ];
 
 export default function ContactPage() {
+  const fallbackEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "jha250805@gmail.com";
   const [form, setForm] = useState<FormState>({
     name: "",
     email: "",
@@ -124,8 +125,17 @@ export default function ContactPage() {
               <button className={styles.submit} disabled={status === "submitting"} type="submit">
                 {status === "submitting" ? "Sending..." : "Send message"}
               </button>
-              {status === "success" && <p className={styles.success}>Thanks—I will reply soon.</p>}
-              {status === "error" && <p className={styles.error}>{error}</p>}
+              {status === "success" && (
+                <p aria-live="polite" className={styles.success} role="status">
+                  Thanks—I will reply soon.
+                </p>
+              )}
+              {status === "error" && (
+                <div aria-live="assertive" className={styles.error} role="alert">
+                  <p>{error}</p>
+                  <a href={`mailto:${fallbackEmail}`}>Email me directly</a>
+                </div>
+              )}
             </div>
           </form>
 
