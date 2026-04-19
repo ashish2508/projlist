@@ -4,6 +4,7 @@ import { projectItems } from "@/lib/project-data";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import { BiLogoLinkedin } from "react-icons/bi";
 import {
   type PointerEvent as ReactPointerEvent,
   useCallback,
@@ -11,7 +12,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { SiCodeforces, SiGithub, SiLeetcode, SiLinkerd } from "react-icons/si";
+import { SiCodeforces, SiGithub, SiLeetcode } from "react-icons/si";
 import * as THREE from "three";
 import styles from "./page.module.css";
 
@@ -22,22 +23,22 @@ type ThemeMode = "day" | "night";
 const socialLinks = [
   {
     label: "GitHub",
-    url: "https://github.com/ashish2508",
+    url: "https://github.com/ashishjha2508",
     icon: SiGithub,
   },
   {
     label: "LinkedIn",
-    url: "https://linkedin.com/in/ashish25-jha",
-    icon: SiLinkerd,
+    url: "https://linkedin.com/in/ashishjha2508",
+    icon: BiLogoLinkedin,
   },
   {
     label: "Codeforces",
-    url: "https://codeforces.com/profile/MeCodeFire",
+    url: "https://codeforces.com/profile/ashishjha2508",
     icon: SiCodeforces,
   },
   {
     label: "LeetCode",
-    url: "https://leetcode.com/u/jha250805",
+    url: "https://leetcode.com/u/ashishjha2508",
     icon: SiLeetcode,
   },
 ];
@@ -74,6 +75,8 @@ export default function Home() {
   const liveRef = useRef<HTMLSpanElement>(null);
   const betaRef = useRef<HTMLSpanElement>(null);
   const archivedRef = useRef<HTMLSpanElement>(null);
+  const ropeStringRef = useRef<HTMLSpanElement>(null);
+  const ropeKnobRef = useRef<HTMLSpanElement>(null);
   const ropeDragRef = useRef(false);
   const ropeStartYRef = useRef(0);
   const ropePullRef = useRef(0);
@@ -506,6 +509,37 @@ export default function Home() {
     };
   }, [statusCount.archived, statusCount.beta, statusCount.live]);
 
+  useEffect(() => {
+    if (!rootRef.current) {
+      return;
+    }
+
+    const context = gsap.context(() => {
+      if (ropeKnobRef.current && ropeStringRef.current) {
+        gsap.fromTo(
+          ropeKnobRef.current,
+          { scale: 0.94 },
+          { scale: 1, duration: 0.6, ease: "elastic.out(1, 0.6)" },
+        );
+
+        gsap.fromTo(
+          ropeStringRef.current,
+          { boxShadow: "0 0 0px rgba(0,0,0,0)" },
+          {
+            boxShadow:
+              theme === "day"
+                ? "0 6px 18px rgba(30, 141, 113, 0.28)"
+                : "0 6px 18px rgba(125, 176, 255, 0.34)",
+            duration: 0.7,
+            ease: "power2.out",
+          },
+        );
+      }
+    }, rootRef);
+
+    return () => context.revert();
+  }, [theme]);
+
   const statusClass = {
     Live: styles.live,
     Beta: styles.beta,
@@ -541,9 +575,14 @@ export default function Home() {
             onPointerDown={handleRopePointerDown}
             type="button"
           >
-            <span className={styles.ropeString} style={{ height: `${68 + ropePull}px` }} />
+            <span
+              className={styles.ropeString}
+              ref={ropeStringRef}
+              style={{ height: `${68 + ropePull}px` }}
+            />
             <span
               className={styles.ropeKnob}
+              ref={ropeKnobRef}
               style={{ transform: `translate(-50%, ${ropePull}px)` }}
             />
           </button>
@@ -551,16 +590,16 @@ export default function Home() {
 
         <header className={styles.hero}>
           <p className={styles.kicker} data-ribbon>
-            Open To Internship 2026
+            Actively Seeking Software Engineering Roles
           </p>
           <h1 className={styles.title} data-title>
-            Building production-style full-stack systems with backend depth.
+            Backend-leaning full-stack engineer who ships production systems.
           </h1>
           <p className={styles.subtitle} data-subtitle>
-            Fourth-year Information Technology student with strong emphasis on
-            scalable backends, type-safe data models, and performance-first
-            engineering. I enjoy solving algorithmic problems and shipping
-            end-to-end systems for real users.
+            Fourth-year Information Technology student specializing in resilient
+            services, type-safe data models, and performance-first product builds.
+            I practice DSA daily, mentor peers on debugging, and enjoy translating
+            business needs into reliable releases that make hiring managers feel safe.
           </p>
 
           <div className={styles.socialRow}>
