@@ -71,10 +71,6 @@ export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const shutterTopRef = useRef<HTMLDivElement>(null);
   const shutterBottomRef = useRef<HTMLDivElement>(null);
-  const totalRef = useRef<HTMLSpanElement>(null);
-  const liveRef = useRef<HTMLSpanElement>(null);
-  const betaRef = useRef<HTMLSpanElement>(null);
-  const archivedRef = useRef<HTMLSpanElement>(null);
   const ropeStringRef = useRef<HTMLSpanElement>(null);
   const ropeKnobRef = useRef<HTMLSpanElement>(null);
   const ropeDragRef = useRef(false);
@@ -83,27 +79,7 @@ export default function Home() {
 
   const [theme, setTheme] = useState<ThemeMode>("day");
   const [ropePull, setRopePull] = useState(0);
-
-  const statusCount = projectItems.reduce(
-    (acc, project) => {
-      if (project.status === "Live") {
-        acc.live += 1;
-      }
-
-      if (project.status === "Beta") {
-        acc.beta += 1;
-      }
-
-      if (project.status === "Archived") {
-        acc.archived += 1;
-      }
-
-      return acc;
-    },
-    { live: 0, beta: 0, archived: 0 },
-  );
-
-  const latestYear = Math.max(...projectItems.map((project) => project.year));
+  const currentYear = new Date().getFullYear();
 
   const toggleThemeWithShutter = useCallback(() => {
     const top = shutterTopRef.current;
@@ -348,22 +324,6 @@ export default function Home() {
       return;
     }
 
-    const animateNumber = (target: HTMLSpanElement | null, value: number) => {
-      if (!target) {
-        return;
-      }
-
-      const state = { value: 0 };
-      gsap.to(state, {
-        value,
-        duration: 1.1,
-        ease: "power2.out",
-        onUpdate: () => {
-          target.textContent = String(Math.round(state.value));
-        },
-      });
-    };
-
     const onPointerMove = (event: MouseEvent) => {
       const offsetX = (event.clientX / window.innerWidth - 0.5) * 30;
       const offsetY = (event.clientY / window.innerHeight - 0.5) * 18;
@@ -387,7 +347,7 @@ export default function Home() {
 
     const context = gsap.context(() => {
       const socialItems = gsap.utils.toArray<HTMLElement>("[data-social-item]");
-      const specs = gsap.utils.toArray<HTMLElement>("[data-spec-card]");
+      const projectNodes = gsap.utils.toArray<HTMLElement>("[data-project-node]");
       const skills = gsap.utils.toArray<HTMLElement>("[data-skill-card]");
       const tiles = gsap.utils.toArray<HTMLElement>("[data-project-tile]");
 
@@ -432,7 +392,7 @@ export default function Home() {
           "-=0.4",
         )
         .from(
-          specs,
+          projectNodes,
           {
             y: 24,
             opacity: 0,
@@ -465,11 +425,6 @@ export default function Home() {
         });
       });
 
-      animateNumber(totalRef.current, projectItems.length);
-      animateNumber(liveRef.current, statusCount.live);
-      animateNumber(betaRef.current, statusCount.beta);
-      animateNumber(archivedRef.current, statusCount.archived);
-
       gsap.to("[data-blob-one]", {
         x: 12,
         y: -8,
@@ -497,7 +452,7 @@ export default function Home() {
           ease: "power2.out",
           scrollTrigger: {
             trigger: tile,
-            start: "top 86%",
+          start: "top 86%",
           },
         });
       });
@@ -507,7 +462,7 @@ export default function Home() {
       window.removeEventListener("mousemove", onPointerMove);
       context.revert();
     };
-  }, [statusCount.archived, statusCount.beta, statusCount.live]);
+  }, []);
 
   useEffect(() => {
     if (!rootRef.current) {
@@ -540,12 +495,6 @@ export default function Home() {
     return () => context.revert();
   }, [theme]);
 
-  const statusClass = {
-    Live: styles.live,
-    Beta: styles.beta,
-    Archived: styles.archived,
-  };
-
   return (
     <div
       className={`${styles.page} ${theme === "night" ? styles.night : ""}`}
@@ -575,6 +524,10 @@ export default function Home() {
             onPointerDown={handleRopePointerDown}
             type="button"
           >
+            <span
+              aria-hidden="true"
+              className={`${styles.ropeBulb} ${theme === "night" ? styles.bulbDim : ""}`}
+            />
             <span
               className={styles.ropeString}
               ref={ropeStringRef}
@@ -622,41 +575,26 @@ export default function Home() {
             })}
           </div>
 
-          <section className={styles.specGrid}>
-            <article className={styles.specCard} data-spec-card>
-              <span className={styles.specLabel}>Projects Built</span>
-              <strong className={styles.specValue} ref={totalRef}>
-                0
-              </strong>
-            </article>
-
-            <article className={styles.specCard} data-spec-card>
-              <span className={styles.specLabel}>Live</span>
-              <strong className={styles.specValue} ref={liveRef}>
-                0
-              </strong>
-            </article>
-
-            <article className={styles.specCard} data-spec-card>
-              <span className={styles.specLabel}>Beta</span>
-              <strong className={styles.specValue} ref={betaRef}>
-                0
-              </strong>
-            </article>
-
-            <article className={styles.specCard} data-spec-card>
-              <span className={styles.specLabel}>Latest Build Year</span>
-              <strong className={styles.specValue}>
-                {latestYear}
-              </strong>
-            </article>
-
-            <article className={styles.specCard} data-spec-card>
-              <span className={styles.specLabel}>Archived</span>
-              <strong className={styles.specValue} ref={archivedRef}>
-                0
-              </strong>
-            </article>
+          <section className={styles.projectNodes}>
+            {projectItems.map((project) => (
+              <a
+                className={styles.projectNode}
+                data-project-node
+                href={project.url}
+                key={project.name}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <div className={styles.projectNodeTitle}>
+                  <span>{project.name}</span>
+                  <span aria-hidden="true">↗</span>
+                </div>
+                <p>{project.summary}</p>
+                <span className={styles.projectNodeUrl}>
+                  {project.url.replace(/^https?:\/\//, "")}
+                </span>
+              </a>
+            ))}
           </section>
         </header>
 
@@ -677,46 +615,63 @@ export default function Home() {
         </section>
 
         <section className={styles.feed}>
-          <header className={styles.sectionHeader}>
-            <h2>Selected Projects</h2>
-            <Link href="/contact">Hire Me</Link>
+          <header className={`${styles.sectionHeader} ${styles.projectsHeader}`}>
+            <div className={styles.sectionIntro}>
+              <p className={styles.kicker}>Selected Projects</p>
+              <h2>Reliable builds shipped to production</h2>
+              <p className={styles.sectionHint}>
+                Short context with direct links—no status clutter.
+              </p>
+            </div>
+            <div className={styles.sectionActions}>
+              <Link className={styles.primaryAction} href="/contact">
+                Hire Me
+              </Link>
+              <Link className={styles.secondaryAction} href="/contact">
+                Start a conversation
+              </Link>
+            </div>
           </header>
 
-          {projectItems.map((project, index) => (
-            <article
-              className={`${styles.tile} ${statusClass[project.status]}`}
-              data-project-tile
-              key={project.name}
-            >
-              <div className={styles.tileTop}>
-                <span className={styles.order}>{String(index + 1).padStart(2, "0")}</span>
-                <span className={styles.statusChip}>{project.status}</span>
-              </div>
+          <div className={styles.projectGrid}>
+            {projectItems.map((project) => (
+              <article className={styles.tile} data-project-tile key={project.name}>
+                <div className={styles.tileHeader}>
+                  <h2>{project.name}</h2>
+                  <span aria-hidden="true" className={styles.tileArrow}>
+                    ↗
+                  </span>
+                </div>
+                <p>{project.summary}</p>
 
-              <h2>{project.name}</h2>
-              <p>{project.summary}</p>
-
-              <div className={styles.tileMeta}>
-                <span>{project.stack}</span>
-                <span>{project.year}</span>
-              </div>
-
-              <ul className={styles.highlightsList}>
-                {project.highlights.map((highlight) => (
-                  <li key={highlight}>{highlight}</li>
-                ))}
-              </ul>
-
-              <a
-                href={project.url}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Visit
-              </a>
-            </article>
-          ))}
+                <div className={styles.tileFooter}>
+                  <span className={styles.tileUrl}>
+                    {project.url.replace(/^https?:\/\//, "")}
+                  </span>
+                  <a
+                    href={project.url}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Visit project
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
+
+        <footer className={styles.footer}>
+          <div className={styles.footerMeta}>
+            <p>© {currentYear} Ashish Jha. All rights reserved.</p>
+            <p>Built for backend-heavy full-stack collaborations.</p>
+          </div>
+          <div className={styles.footerLinks}>
+            <a href="/rss.xml">RSS feed</a>
+            <a href="/sitemap.xml">Sitemap</a>
+            <Link href="/contact">Contact</Link>
+          </div>
+        </footer>
       </main>
     </div>
   );

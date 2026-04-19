@@ -24,6 +24,11 @@ Outbound email uses SMTP. Set the following environment variables:
 
 Without these values, the `/api/contact` endpoint will return an error instead of sending mail.
 
+## Feeds and sitemap
+
+- `/sitemap.xml` and `/rss.xml` are generated from the homepage content. Set `NEXT_PUBLIC_SITE_URL` to your deployed origin so links are canonical.
+- Optionally set `NEXT_PUBLIC_CONTACT_EMAIL` to control the fallback `mailto:` link shown when the contact form cannot deliver mail.
+
 ## Notes
 
 - Rope pull in the nav toggles the shuttered day/night experience.
