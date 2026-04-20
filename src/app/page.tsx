@@ -209,7 +209,7 @@ export default function Home() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(theme === "day" ? "#f3efe7" : "#050e1a", 4.5, 14);
+    scene.fog = new THREE.Fog(theme === "day" ? "#18211f" : "#050e1a", 4.5, 14);
 
     const camera = new THREE.PerspectiveCamera(
       44,
@@ -220,12 +220,12 @@ export default function Home() {
     camera.position.set(0, 0.15, 6.8);
 
     const ambientLight = new THREE.AmbientLight(
-      theme === "day" ? "#f9f2df" : "#8db0d9",
-      theme === "day" ? 0.92 : 0.55,
+      theme === "day" ? "#d8d1b5" : "#8db0d9",
+      theme === "day" ? 0.62 : 0.55,
     );
     const keyLight = new THREE.PointLight(
-      theme === "day" ? "#85cfb2" : "#4f79de",
-      theme === "day" ? 1.45 : 1.9,
+      theme === "day" ? "#1f896c" : "#4f79de",
+      theme === "day" ? 1.3 : 1.9,
       20,
       1.4,
     );
@@ -262,10 +262,10 @@ export default function Home() {
     );
 
     const particlesMaterial = new THREE.PointsMaterial({
-      color: theme === "day" ? "#4ca58b" : "#8fb6ff",
+      color: theme === "day" ? "#3e8b72" : "#8fb6ff",
       size: 0.045,
       transparent: true,
-      opacity: theme === "day" ? 0.2 : 0.3,
+      opacity: theme === "day" ? 0.16 : 0.3,
       depthWrite: false,
     });
 
