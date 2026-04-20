@@ -1,6 +1,7 @@
 "use client";
 
 import { projectItems } from "@/lib/project-data";
+import { ProjectCard } from "@/components/project-card";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
@@ -43,34 +44,12 @@ const socialLinks = [
   },
 ];
 
-const skillCards = [
-  {
-    title: "Languages",
-    details: "C, C++, Go, Java, TypeScript, JavaScript",
-  },
-  {
-    title: "Frontend",
-    details: "React, Next.js (App Router), Zustand, Tailwind CSS",
-  },
-  {
-    title: "Backend",
-    details: "Convex realtime backend, REST APIs, Clerk/Auth.js flows",
-  },
-  {
-    title: "Databases",
-    details: "PostgreSQL, Neon serverless, Drizzle ORM, query optimization",
-  },
-  {
-    title: "Core CS",
-    details: "DSA, DBMS, OS, CN, distributed systems foundations",
-  },
-];
-
 export default function Home() {
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const shutterTopRef = useRef<HTMLDivElement>(null);
   const shutterBottomRef = useRef<HTMLDivElement>(null);
+  const ropeAssemblyRef = useRef<HTMLSpanElement>(null);
   const ropeStringRef = useRef<HTMLSpanElement>(null);
   const ropeKnobRef = useRef<HTMLSpanElement>(null);
   const ropeDragRef = useRef(false);
@@ -80,6 +59,19 @@ export default function Home() {
   const [theme, setTheme] = useState<ThemeMode>("day");
   const [ropePull, setRopePull] = useState(0);
   const currentYear = new Date().getFullYear();
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const body = document.body;
+
+    root.dataset.pageTheme = theme;
+    body.dataset.pageTheme = theme;
+
+    return () => {
+      delete root.dataset.pageTheme;
+      delete body.dataset.pageTheme;
+    };
+  }, [theme]);
 
   const toggleThemeWithShutter = useCallback(() => {
     const top = shutterTopRef.current;
@@ -163,6 +155,17 @@ export default function Home() {
       if (shouldToggle) {
         toggleThemeWithShutter();
       }
+
+      if (ropeAssemblyRef.current) {
+        gsap.to(ropeAssemblyRef.current, {
+          rotation: 3.5,
+          duration: 1.8,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          delay: 0.12,
+        });
+      }
     };
 
     window.addEventListener("pointermove", onPointerMove);
@@ -179,6 +182,14 @@ export default function Home() {
   const handleRopePointerDown = (event: ReactPointerEvent<HTMLButtonElement>) => {
     ropeDragRef.current = true;
     ropeStartYRef.current = event.clientY;
+    if (ropeAssemblyRef.current) {
+      gsap.killTweensOf(ropeAssemblyRef.current);
+      gsap.to(ropeAssemblyRef.current, {
+        rotation: 0,
+        duration: 0.18,
+        ease: "power2.out",
+      });
+    }
     event.currentTarget.setPointerCapture(event.pointerId);
   };
 
@@ -347,8 +358,6 @@ export default function Home() {
 
     const context = gsap.context(() => {
       const socialItems = gsap.utils.toArray<HTMLElement>("[data-social-item]");
-      const projectNodes = gsap.utils.toArray<HTMLElement>("[data-project-node]");
-      const skills = gsap.utils.toArray<HTMLElement>("[data-skill-card]");
       const tiles = gsap.utils.toArray<HTMLElement>("[data-project-tile]");
 
       gsap
@@ -392,16 +401,6 @@ export default function Home() {
           "-=0.4",
         )
         .from(
-          projectNodes,
-          {
-            y: 24,
-            opacity: 0,
-            duration: 0.54,
-            stagger: 0.08,
-          },
-          "-=0.36",
-        )
-        .from(
           tiles,
           {
             y: 20,
@@ -411,19 +410,6 @@ export default function Home() {
           },
           "-=0.16",
         );
-
-      skills.forEach((skill, index) => {
-        gsap.from(skill, {
-          y: 28,
-          opacity: 0,
-          duration: 0.52,
-          delay: index * 0.03,
-          scrollTrigger: {
-            trigger: skill,
-            start: "top 86%",
-          },
-        });
-      });
 
       gsap.to("[data-blob-one]", {
         x: 12,
@@ -443,19 +429,6 @@ export default function Home() {
         yoyo: true,
       });
 
-      tiles.forEach((tile) => {
-        gsap.from(tile, {
-          y: 28,
-          opacity: 0,
-          scale: 0.97,
-          duration: 0.55,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: tile,
-          start: "top 86%",
-          },
-        });
-      });
     }, rootRef);
 
     return () => {
@@ -470,7 +443,19 @@ export default function Home() {
     }
 
     const context = gsap.context(() => {
-      if (ropeKnobRef.current && ropeStringRef.current) {
+      if (ropeAssemblyRef.current && ropeKnobRef.current && ropeStringRef.current) {
+        gsap.fromTo(
+          ropeAssemblyRef.current,
+          { rotation: -3.5 },
+          {
+            rotation: 3.5,
+            duration: 1.8,
+            ease: "sine.inOut",
+            repeat: -1,
+            yoyo: true,
+          },
+        );
+
         gsap.fromTo(
           ropeKnobRef.current,
           { scale: 0.94 },
@@ -526,18 +511,23 @@ export default function Home() {
           >
             <span
               aria-hidden="true"
-              className={`${styles.ropeBulb} ${theme === "night" ? styles.bulbDim : ""}`}
-            />
-            <span
-              className={styles.ropeString}
-              ref={ropeStringRef}
-              style={{ height: `${68 + ropePull}px` }}
-            />
-            <span
-              className={styles.ropeKnob}
-              ref={ropeKnobRef}
-              style={{ transform: `translate(-50%, ${ropePull}px)` }}
-            />
+              className={styles.ropeAssembly}
+              ref={ropeAssemblyRef}
+            >
+              <span
+                className={`${styles.ropeBulb} ${theme === "night" ? styles.bulbDim : ""}`}
+              />
+              <span
+                className={styles.ropeString}
+                ref={ropeStringRef}
+                style={{ height: `${68 + ropePull}px` }}
+              />
+              <span
+                className={styles.ropeKnob}
+                ref={ropeKnobRef}
+                style={{ transform: `translate(-50%, ${ropePull}px)` }}
+              />
+            </span>
           </button>
         </nav>
 
@@ -574,89 +564,32 @@ export default function Home() {
               );
             })}
           </div>
-
-          <section className={styles.projectNodes}>
-            {projectItems.map((project) => (
-              <a
-                className={styles.projectNode}
-                data-project-node
-                href={project.url}
-                key={project.name}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                <div className={styles.projectNodeTitle}>
-                  <span>{project.name}</span>
-                  <span aria-hidden="true">↗</span>
-                </div>
-                <p>{project.summary}</p>
-                <span className={styles.projectNodeUrl}>
-                  {project.url.replace(/^https?:\/\//, "")}
-                </span>
-              </a>
-            ))}
-          </section>
         </header>
-
-        <section className={styles.skillsSection}>
-          <header className={styles.sectionHeader}>
-            <h2>Core Skills</h2>
-            <p>Production engineering stack for product development.</p>
-          </header>
-
-          <div className={styles.skillsGrid}>
-            {skillCards.map((skill) => (
-              <article className={styles.skillCard} data-skill-card key={skill.title}>
-                <h3>{skill.title}</h3>
-                <p>{skill.details}</p>
-              </article>
-            ))}
-          </div>
-        </section>
 
         <section className={styles.feed}>
           <header className={`${styles.sectionHeader} ${styles.projectsHeader}`}>
-            <div className={styles.sectionIntro}>
-              <p className={styles.kicker}>Selected Projects</p>
-              <h2>Reliable builds shipped to production</h2>
-              <p className={styles.sectionHint}>
-                Short context with direct links—no status clutter.
-              </p>
-            </div>
-            <div className={styles.sectionActions}>
-              <Link className={styles.primaryAction} href="/contact">
-                Hire Me
-              </Link>
-              <Link className={styles.secondaryAction} href="/contact">
-                Start a conversation
-              </Link>
+            <div className={styles.projectsLead}>
+              <div className={styles.sectionIntro}>
+                <p className={styles.kicker}>Selected Projects</p>
+                <h2>Reliable builds shipped to production</h2>
+                <p className={styles.sectionHint}>
+                  Short context with direct links—no status clutter.
+                </p>
+              </div>
+              <div className={styles.sectionActions}>
+                <Link className={styles.primaryAction} href="/contact">
+                  Hire Me
+                </Link>
+                <Link className={styles.secondaryAction} href="/contact">
+                  Start a conversation
+                </Link>
+              </div>
             </div>
           </header>
 
           <div className={styles.projectGrid}>
             {projectItems.map((project) => (
-              <article className={styles.tile} data-project-tile key={project.name}>
-                <div className={styles.tileHeader}>
-                  <h2>{project.name}</h2>
-                  <span aria-hidden="true" className={styles.tileArrow}>
-                    ↗
-                  </span>
-                </div>
-                <p>{project.summary}</p>
-
-                <div className={styles.tileFooter}>
-                  <span className={styles.tileUrl}>
-                    {project.url.replace(/^https?:\/\//, "")}
-                  </span>
-                  <a
-                    href={project.url}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    Visit project
-                  </a>
-                </div>
-              </article>
+              <ProjectCard key={project.name} project={project} />
             ))}
           </div>
         </section>

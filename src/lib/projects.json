@@ -1,0 +1,37 @@
+[
+  {
+    "name": "Type-DD",
+    "summary": "Browser-based multi-language code execution platform designed for concurrent usage.",
+    "url": "https://code.bysao.dev"
+  },
+  {
+    "name": "Memeify",
+    "summary": "Full-stack content platform for creating, editing, and sharing memes with robust moderation.",
+    "url": "https://memeify.bysao.dev"
+  },
+  {
+    "name": "Cloud-Drive",
+    "summary": "Realtime cloud storage system with file synchronization and hierarchical management.",
+    "url": "https://cloud.bysao.dev"
+  },
+  {
+    "name": "Textify",
+    "summary": "1-to-1 real-time multilingual chat with instant translation and a neo-brutalism interface.",
+    "url": "https://textify.bysao.dev"
+  },
+  {
+    "name": "vsc.eezzy",
+    "summary": "A VS Code theme made from Eeezzy.nvim, the Neovim theme I also built.",
+    "url": "https://marketplace.visualstudio.com/items?itemName=ashish2508.vsc-eezzy-nvim"
+  },
+  {
+    "name": "My Neovim Configuration",
+    "summary": "Personal lazy.nvim setup with 60 plugins, root /, init.lua, 3592 lines of code, and Space as leader key.",
+    "url": "https://dotfyle.com/ashish2508/my-nvim"
+  },
+  {
+    "name": "HorseForward-Game",
+    "summary": "JavaScript canvas game using class inheritance for real-time actions with art assets that are free to use per the owner.",
+    "url": "https://wrecked-aliens.netlify.app"
+  }
+]

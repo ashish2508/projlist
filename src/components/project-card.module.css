@@ -1,0 +1,127 @@
+.card {
+  display: grid;
+  gap: 0.65rem;
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.card:hover {
+  border-color: var(--accent);
+}
+
+.compact {
+  background: var(--node-surface);
+  box-shadow: var(--shadow);
+  padding: 0.9rem 1rem;
+  gap: 0.3rem;
+}
+
+.compact:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgb(10 19 34 / 16%);
+}
+
+.detailed {
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: clamp(1rem, 2vw, 1.15rem);
+}
+
+.detailed:nth-child(odd) {
+  transform: rotate(-0.4deg);
+}
+
+.detailed:nth-child(even) {
+  transform: rotate(0.4deg);
+}
+
+.detailed:hover {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow: 0 18px 34px rgb(10 19 34 / 18%);
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.titleRow h3 {
+  margin: 0;
+  font-size: clamp(1.05rem, 2vw, 1.28rem);
+  letter-spacing: -0.02em;
+}
+
+.compact .titleRow h3 {
+  font-size: 1rem;
+}
+
+.arrow {
+  font-family: var(--font-ibm-plex-mono), monospace;
+  color: var(--accent-two);
+}
+
+.summary {
+  margin: 0;
+  color: var(--muted-color);
+  line-height: 1.55;
+}
+
+.url {
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.78rem;
+  color: var(--project-link-color);
+  text-shadow: var(--project-link-shadow);
+  box-shadow:
+    inset 0 0 0 1px var(--project-link-border),
+    0 0 18px rgb(95 207 242 / 10%);
+  background: var(--project-link-bg);
+  border-radius: 999px;
+  padding: 0.16rem 0.55rem;
+  overflow-wrap: anywhere;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.compact .footer {
+  display: block;
+}
+
+.detailed .url {
+  font-size: 0.8rem;
+}
+
+.cta {
+  width: fit-content;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  padding: 0.38rem 0.7rem;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--surface);
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.card:hover .cta {
+  background: var(--text-color);
+  color: #fdfdfd;
+}
+
+@media (max-width: 960px) {
+  .detailed:nth-child(odd),
+  .detailed:nth-child(even) {
+    transform: rotate(0deg);
+  }
+}

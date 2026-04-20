@@ -12,6 +12,13 @@ type FormState = {
   message: string;
 };
 
+type ContactSuccessResponse = {
+  ok: true;
+  mode?: "mailto";
+  href?: string;
+  notice?: string;
+};
+
 const socialLinks = [
   { label: "GitHub", url: "https://github.com/ashish2508", icon: SiGithub },
   { label: "LinkedIn", url: "https://linkedin.com/in/ashish25-jha/", icon: BiLogoLinkedin },
@@ -28,11 +35,13 @@ export default function ContactPage() {
   });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setStatus("submitting");
     setError(null);
+    setSuccessMessage(null);
 
     try {
       const response = await fetch("/api/contact", {
@@ -43,11 +52,23 @@ export default function ContactPage() {
         body: JSON.stringify(form),
       });
 
+      const data = (await response.json().catch(() => null)) as
+        | ContactSuccessResponse
+        | { error?: string }
+        | null;
+
       if (!response.ok) {
-        const data = (await response.json().catch(() => null)) as { error?: string } | null;
         throw new Error(data?.error ?? "Unable to deliver your message right now.");
       }
 
+      if (data?.mode === "mailto" && data.href) {
+        window.location.href = data.href;
+        setSuccessMessage(data.notice ?? "An email draft has been opened for you.");
+        setStatus("success");
+        return;
+      }
+
+      setSuccessMessage("Thanks—I will reply soon.");
       setStatus("success");
       setForm({ name: "", email: "", message: "" });
     } catch (err) {
@@ -127,7 +148,7 @@ export default function ContactPage() {
               </button>
               {status === "success" && (
                 <p aria-live="polite" className={styles.success} role="status">
-                  Thanks—I will reply soon.
+                  {successMessage}
                 </p>
               )}
               {status === "error" && (

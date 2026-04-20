@@ -18,6 +18,14 @@ export const metadata: Metadata = {
   title: "Ashish Jha | Full-Stack Developer",
   description:
     "Portfolio and contact hub for Ashish Jha, a full-stack engineer building reliable products.",
+  icons: {
+    icon: [
+      { url: "/faviconx32.ico", sizes: "32x32", type: "image/x-icon" },
+      { url: "/faviconx64.ico", sizes: "64x64", type: "image/x-icon" },
+    ],
+    shortcut: "/faviconx32.ico",
+    apple: "/faviconx64.ico",
+  },
 };
 
 export default function RootLayout({

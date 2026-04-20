@@ -13,6 +13,17 @@ body {
   min-height: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  overflow-y: auto;
+}
+
+html[data-page-theme="day"],
+body[data-page-theme="day"] {
+  background: #eef5f8;
+}
+
+html[data-page-theme="night"],
+body[data-page-theme="night"] {
+  background: #060710;
 }
 
 body {

@@ -5,6 +5,23 @@ export const runtime = "nodejs";
 
 const targetEmail = process.env.CONTACT_TARGET_EMAIL ?? "jha250805@gmail.com";
 
+const buildMailtoHref = ({
+  name,
+  email,
+  message,
+}: {
+  name: string;
+  email: string;
+  message: string;
+}) => {
+  const params = new URLSearchParams({
+    subject: `Portfolio contact from ${name}`,
+    body: `Name: ${name}\nEmail: ${email}\n\nPurpose:\n${message}`,
+  });
+
+  return `mailto:${targetEmail}?${params.toString()}`;
+};
+
 const getTransporter = () => {
   const host = process.env.SMTP_HOST;
   const user = process.env.SMTP_USER;
@@ -40,8 +57,12 @@ export async function POST(request: NextRequest) {
 
   if (!transporter) {
     return NextResponse.json(
-      { error: "Mail service is not configured yet. Please try again soon." },
-      { status: 500 },
+      {
+        ok: true,
+        mode: "mailto",
+        href: buildMailtoHref({ name, email, message }),
+        notice: "Email draft opened because direct mail delivery is not configured yet.",
+      },
     );
   }
 
