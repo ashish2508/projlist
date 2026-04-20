@@ -19,6 +19,10 @@ type ContactSuccessResponse = {
   notice?: string;
 };
 
+type ContactErrorResponse = {
+  error?: string;
+};
+
 const socialLinks = [
   { label: "GitHub", url: "https://github.com/ashish2508", icon: SiGithub },
   { label: "LinkedIn", url: "https://linkedin.com/in/ashish25-jha/", icon: BiLogoLinkedin },
@@ -54,16 +58,20 @@ export default function ContactPage() {
 
       const data = (await response.json().catch(() => null)) as
         | ContactSuccessResponse
-        | { error?: string }
+        | ContactErrorResponse
         | null;
 
       if (!response.ok) {
-        throw new Error(data?.error ?? "Unable to deliver your message right now.");
+        const message =
+          data && "error" in data ? data.error : "Unable to deliver your message right now.";
+        throw new Error(message ?? "Unable to deliver your message right now.");
       }
 
-      if (data?.mode === "mailto" && data.href) {
-        window.location.href = data.href;
-        setSuccessMessage(data.notice ?? "An email draft has been opened for you.");
+      const successData = data as ContactSuccessResponse | null;
+
+      if (successData?.mode === "mailto" && successData.href) {
+        window.location.href = successData.href;
+        setSuccessMessage(successData.notice ?? "An email draft has been opened for you.");
         setStatus("success");
         return;
       }
