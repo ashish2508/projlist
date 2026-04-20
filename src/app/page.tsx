@@ -4,7 +4,6 @@ import { projectItems } from "@/lib/project-data";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import { BiLogoLinkedin } from "react-icons/bi";
 import {
   type PointerEvent as ReactPointerEvent,
   useCallback,
@@ -12,6 +11,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { BiLogoLinkedin } from "react-icons/bi";
 import { SiCodeforces, SiGithub, SiLeetcode } from "react-icons/si";
 import * as THREE from "three";
 import styles from "./page.module.css";
@@ -23,22 +23,22 @@ type ThemeMode = "day" | "night";
 const socialLinks = [
   {
     label: "GitHub",
-    url: "https://github.com/ashishjha2508",
+    url: "https://github.com/ashish2508",
     icon: SiGithub,
   },
   {
     label: "LinkedIn",
-    url: "https://linkedin.com/in/ashishjha2508",
+    url: "https://linkedin.com/in/ashish25-jha/",
     icon: BiLogoLinkedin,
   },
   {
     label: "Codeforces",
-    url: "https://codeforces.com/profile/ashishjha2508",
+    url: "https://codeforces.com/profile/MeCodeFire",
     icon: SiCodeforces,
   },
   {
     label: "LeetCode",
-    url: "https://leetcode.com/u/ashishjha2508",
+    url: "https://leetcode.com/u/jha250805",
     icon: SiLeetcode,
   },
 ];
@@ -511,7 +511,7 @@ export default function Home() {
         <nav className={styles.topNav} data-nav>
           <div className={styles.identityBlock}>
             <p className={styles.identityName}>Ashish Jha</p>
-            <p className={styles.identityRole}>Backend-Heavy Full-Stack Developer</p>
+            <p className={styles.identityRole}>Full-Stack Developer</p>
           </div>
 
           <div className={styles.navActions}>
@@ -546,7 +546,7 @@ export default function Home() {
             Actively Seeking Software Engineering Roles
           </p>
           <h1 className={styles.title} data-title>
-            Backend-leaning full-stack engineer who ships production systems.
+            full-stack engineer who ships production systems.
           </h1>
           <p className={styles.subtitle} data-subtitle>
             Fourth-year Information Technology student specializing in resilient
@@ -601,7 +601,7 @@ export default function Home() {
         <section className={styles.skillsSection}>
           <header className={styles.sectionHeader}>
             <h2>Core Skills</h2>
-            <p>Production engineering stack for backend-heavy product development.</p>
+            <p>Production engineering stack for product development.</p>
           </header>
 
           <div className={styles.skillsGrid}>

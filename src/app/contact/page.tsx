@@ -13,10 +13,10 @@ type FormState = {
 };
 
 const socialLinks = [
-  { label: "GitHub", url: "https://github.com/ashishjha2508", icon: SiGithub },
-  { label: "LinkedIn", url: "https://linkedin.com/in/ashishjha2508", icon: BiLogoLinkedin },
-  { label: "Codeforces", url: "https://codeforces.com/profile/ashishjha2508", icon: SiCodeforces },
-  { label: "LeetCode", url: "https://leetcode.com/u/ashishjha2508", icon: SiLeetcode },
+  { label: "GitHub", url: "https://github.com/ashish2508", icon: SiGithub },
+  { label: "LinkedIn", url: "https://linkedin.com/in/ashish25-jha/", icon: BiLogoLinkedin },
+  { label: "Codeforces", url: "https://codeforces.com/profile/MeCodeFire", icon: SiCodeforces },
+  { label: "LeetCode", url: "https://leetcode.com/u/jha250805", icon: SiLeetcode },
 ];
 
 export default function ContactPage() {
@@ -71,7 +71,7 @@ export default function ContactPage() {
             <Link href="/" className={styles.chip}>
               ← Back to projects
             </Link>
-            <span className={styles.chip}>Available for backend-heavy full-stack work</span>
+            <span className={styles.chip}>Available for full-stack work</span>
           </div>
         </header>
 
@@ -143,7 +143,7 @@ export default function ContactPage() {
             <div className={styles.card}>
               <h2>Quick facts</h2>
               <ul className={styles.list}>
-                <li>Backend-leaning full-stack developer focused on reliability</li>
+                <li>full-stack developer focused on reliability</li>
                 <li>Comfortable across React/Next.js, Convex, PostgreSQL, Drizzle, and Go</li>
                 <li>Enjoy solving systems and algorithmic challenges for product teams</li>
               </ul>
