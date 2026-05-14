@@ -198,10 +198,6 @@ export default function ContactPage() {
                   );
                 })}
               </div>
-              <p className={styles.note}>
-                Prefer async first: send your scope, problem statement, or role expectations and
-                I&apos;ll respond with next steps.
-              </p>
             </div>
           </aside>
         </section>
