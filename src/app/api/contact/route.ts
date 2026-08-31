@@ -1,44 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+
+import { sendContactMail } from "@/lib/contact-mail";
 
 export const runtime = "nodejs";
 
 const targetEmail = process.env.CONTACT_TARGET_EMAIL ?? "jha250805@gmail.com";
-
-const buildMailtoHref = ({
-  name,
-  email,
-  message,
-}: {
-  name: string;
-  email: string;
-  message: string;
-}) => {
-  const params = new URLSearchParams({
-    subject: `Portfolio contact from ${name}`,
-    body: `Name: ${name}\nEmail: ${email}\n\nPurpose:\n${message}`,
-  });
-
-  return `mailto:${targetEmail}?${params.toString()}`;
-};
-
-const getTransporter = () => {
-  const host = process.env.SMTP_HOST;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  const port = Number(process.env.SMTP_PORT ?? 587);
-
-  if (!host || !user || !pass) {
-    return null;
-  }
-
-  return nodemailer.createTransport({
-    host,
-    port,
-    secure: port === 465,
-    auth: { user, pass },
-  });
-};
 
 export async function POST(request: NextRequest) {
   const payload = await request.json().catch(() => null);
@@ -53,36 +19,25 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const transporter = getTransporter();
+  const result = await sendContactMail({
+    targetEmail,
+    name,
+    email,
+    message,
+  });
 
-  if (!transporter) {
-    return NextResponse.json(
-      {
-        ok: true,
-        mode: "mailto",
-        href: buildMailtoHref({ name, email, message }),
-        notice: "Email draft opened because direct mail delivery is not configured yet.",
-      },
-    );
-  }
-
-  const sender = process.env.SMTP_FROM ?? process.env.SMTP_USER ?? targetEmail;
-
-  try {
-    await transporter.sendMail({
-      to: targetEmail,
-      from: sender,
-      replyTo: email,
-      subject: `Portfolio contact from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\n\nPurpose:\n${message}`,
+  if (result.ok && result.mode === "mailto") {
+    return NextResponse.json({
+      ok: true,
+      mode: "mailto",
+      href: result.href,
+      notice: result.notice,
     });
-
-    return NextResponse.json({ ok: true });
-  } catch (error) {
-    console.error("Failed to send contact mail", error);
-    return NextResponse.json(
-      { error: "Unable to send your message right now. Please try again in a bit." },
-      { status: 500 },
-    );
   }
+
+  if (!result.ok) {
+    return NextResponse.json({ error: result.error }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true });
 }
