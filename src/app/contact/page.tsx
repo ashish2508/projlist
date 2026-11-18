@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Room } from "@/components/room";
 import { FormEvent, useState } from "react";
 import { BiLogoLinkedin } from "react-icons/bi";
 import { SiCodeforces, SiGithub, SiLeetcode } from "react-icons/si";
@@ -52,7 +52,7 @@ export default function ContactPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-        },
+    },
         body: JSON.stringify(form),
       });
 
@@ -87,121 +87,104 @@ export default function ContactPage() {
   };
 
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <header className={styles.hero}>
-          <p className={styles.kicker}>Contact</p>
-          <h1>Tell me about the role or collaboration you have in mind.</h1>
-          <p>
-            I reply within a day whenever possible. Your note is delivered privately—no email
-            address is shown on the site.
-          </p>
-          <div className={styles.actions}>
-            <Link href="/" className={styles.chip}>
-              ← Back to projects
-            </Link>
-            <span className={styles.chip}>Available for full-stack work</span>
+    <Room id="contact">
+      <section className={styles.grid}>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <div className={styles.field}>
+            <label htmlFor="name">Your name</label>
+            <input
+              id="name"
+              name="name"
+              value={form.name}
+              onChange={(event) =>
+                setForm((previous) => ({ ...previous, name: event.target.value }))
+              }
+              placeholder="Jane Doe"
+              required
+            />
           </div>
-        </header>
 
-        <section className={styles.grid}>
-          <form className={styles.form} onSubmit={handleSubmit}>
-            <div className={styles.field}>
-              <label htmlFor="name">Your name</label>
-              <input
-                id="name"
-                name="name"
-                value={form.name}
-                onChange={(event) =>
-                  setForm((previous) => ({ ...previous, name: event.target.value }))
-                }
-                placeholder="Jane Doe"
-                required
-              />
-            </div>
+          <div className={styles.field}>
+            <label htmlFor="email">Work email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={(event) =>
+                setForm((previous) => ({ ...previous, email: event.target.value }))
+              }
+              placeholder="you@company.com"
+              required
+            />
+          </div>
 
-            <div className={styles.field}>
-              <label htmlFor="email">Work email</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={form.email}
-                onChange={(event) =>
-                  setForm((previous) => ({ ...previous, email: event.target.value }))
-                }
-                placeholder="you@company.com"
-                required
-              />
-            </div>
+          <div className={styles.field}>
+            <label htmlFor="message">Purpose of contact</label>
+            <textarea
+              id="message"
+              name="message"
+              rows={6}
+              value={form.message}
+              onChange={(event) =>
+                setForm((previous) => ({ ...previous, message: event.target.value }))
+              }
+              placeholder="Share the role details, project goals, or timelines."
+              required
+            />
+          </div>
 
-            <div className={styles.field}>
-              <label htmlFor="message">Purpose of contact</label>
-              <textarea
-                id="message"
-                name="message"
-                rows={6}
-                value={form.message}
-                onChange={(event) =>
-                  setForm((previous) => ({ ...previous, message: event.target.value }))
-                }
-                placeholder="Share the role details, project goals, or timelines."
-                required
-              />
-            </div>
-
-            <div className={styles.formFooter}>
-              <button className={styles.submit} disabled={status === "submitting"} type="submit">
-                {status === "submitting" ? "Sending..." : "Send message"}
-              </button>
-              {status === "success" && (
-                <p aria-live="polite" className={styles.success} role="status">
-                  {successMessage}
-                </p>
-              )}
-              {status === "error" && (
-                <div aria-live="assertive" className={styles.error} role="alert">
-                  <p>{error}</p>
-                  <a href={`mailto:${fallbackEmail}`}>Email me directly</a>
-                </div>
-              )}
-            </div>
-          </form>
-
-          <aside className={styles.sidebar}>
-            <div className={styles.card}>
-              <h2>Quick facts</h2>
-              <ul className={styles.list}>
-                <li>full-stack developer focused on reliability</li>
-                <li>Comfortable across React/Next.js, Convex, PostgreSQL, Drizzle, and Go</li>
-                <li>Enjoy solving systems and algorithmic challenges for product teams</li>
-              </ul>
-            </div>
-
-            <div className={styles.card}>
-              <h2>Connect elsewhere</h2>
-              <div className={styles.socialGrid}>
-                {socialLinks.map((item) => {
-                  const Icon = item.icon;
-
-                  return (
-                    <a
-                      className={styles.socialLink}
-                      href={item.url}
-                      key={item.label}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <Icon />
-                      <span>{item.label}</span>
-                    </a>
-                  );
-                })}
+          <div className={styles.formFooter}>
+            <button className={styles.submit} disabled={status === "submitting"} type="submit">
+              {status === "submitting" ? "Sending..." : "Send message"}
+            </button>
+            {status === "success" && (
+              <p aria-live="polite" className={styles.success} role="status">
+                {successMessage}
+              </p>
+            )}
+            {status === "error" && (
+              <div aria-live="assertive" className={styles.error} role="alert">
+                <p>{error}</p>
+                <a href={`mailto:${fallbackEmail}`}>Email me directly</a>
               </div>
+            )}
+          </div>
+        </form>
+
+        <aside className={styles.sidebar}>
+          <div className={styles.card}>
+            <h2>Quick facts</h2>
+            <ul className={styles.list}>
+              <li>full-stack developer focused on reliability</li>
+              <li>Comfortable across React/Next.js, Convex, PostgreSQL, Drizzle, and Go</li>
+              <li>Enjoy solving systems and algorithmic challenges for product teams</li>
+            </ul>
+          </div>
+
+          <div className={styles.card}>
+            <h2>Connect elsewhere</h2>
+            <div className={styles.socialGrid}>
+              {socialLinks.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <a
+                    className={styles.socialLink}
+                    href={item.url}
+                    key={item.label}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <Icon />
+                    <span>{item.label}</span>
+                  </a>
+                );
+              })}
             </div>
-          </aside>
-        </section>
-      </main>
-    </div>
+          </div>
+        </aside>
+      </section>
+    </Room>
   );
 }

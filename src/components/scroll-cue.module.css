@@ -1,0 +1,24 @@
+.scrollCue {
+  position: absolute;
+  bottom: 44px;
+  left: var(--scene-copy-left);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font: 11px var(--font-ibm-plex-mono), monospace;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #6f5a57;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+.scrollCue::before {
+  content: "";
+  width: 1px;
+  height: 28px;
+  background: currentColor;
+}
+.scrollCue[data-faded="true"] { opacity: 0; }
+@media (min-width: 900px) and (max-width: 1100px) { .scrollCue { bottom: 100px; } }
+@media (max-width: 899px) { .scrollCue { display: none; } }
+@media (prefers-reduced-motion: reduce) { .scrollCue { transition: none; } }

@@ -1,0 +1,62 @@
+.player {
+  position: fixed;
+  right: max(14px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  z-index: 5;
+  width: min(368px, calc(100vw - 28px));
+  border: 1px solid #daccc0;
+  border-radius: 12px;
+  background: #fcf7f1;
+  box-shadow: 0 3px 14px #503b3110;
+}
+.inner {display:flex;align-items:center;gap:9px;padding:7px 12px}
+.note {color:#93405a;width:18px;height:18px;flex:none}
+.credit {display:grid;gap:2px;margin-right:auto;min-width:0}
+.credit strong {font:italic 1.25rem Georgia,serif;color:#522c37}
+.credit span,.credit small,.volume span {font-size:.73rem;color:#63534f}
+.inner button {display:grid;place-items:center;flex:none;background:transparent;color:#653c49;border:1px solid #cfbcb6;border-radius:50%;width:34px;height:34px;cursor:pointer}
+.inner button:hover {background:#f5dce1}
+.inner button svg {width:16px;height:16px}
+.speaker {position:relative;flex:none}
+.volume {position:absolute;bottom:100%;right:-6px;display:flex;align-items:center;gap:8px;width:158px;padding:10px 12px;border:1px solid #daccc0;border-radius:10px;background:#fcf7f1;box-shadow:0 2px 10px #503b3114;visibility:hidden;opacity:0;transition:opacity .15s}
+.speaker:hover .volume,.speaker:focus-within .volume {visibility:visible;opacity:1}
+.volume input {width:100%;min-width:0;height:20px;accent-color:#93405a;cursor:pointer}
+.volume span {min-width:32px;text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:480px){.player{width:min(330px,calc(100vw - 28px))}.inner{gap:6px}.note{display:none}}
+
+:global(body:has([data-scene-home])) .player {
+  background: rgba(250, 243, 242, .88);
+  border-color: #e2c6c6;
+}
+
+@media (min-width: 900px) {
+  :global(body:has([data-scene-home])) .player {
+    right: max(40px, env(safe-area-inset-right));
+    bottom: max(36px, env(safe-area-inset-bottom));
+    width: 380px;
+  }
+  :global(body:has([data-scene-home])) .inner { min-height: 54px; }
+}
+
+@media (max-width: 899px) {
+  :global(body:has([data-scene-home])) .player {
+    position: absolute;
+    top: 8px;
+    right: max(12px, env(safe-area-inset-right));
+    bottom: auto;
+    width: min(226px, calc(100% - 152px));
+    border-radius: 9px;
+  }
+  :global(body:has([data-scene-home])) .inner { gap: 4px; padding: 5px; }
+  :global(body:has([data-scene-home])) .note { display: none; }
+  :global(body:has([data-scene-home])) .credit strong { font-size: .92rem; }
+  :global(body:has([data-scene-home])) .credit span { font-size: .65rem; }
+  :global(body:has([data-scene-home])) .credit :is(strong, span, small) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  :global(body:has([data-scene-home])) .inner button { width: 28px; height: 28px; }
+  :global(body:has([data-scene-home])) .inner button svg { width: 13px; height: 13px; }
+  :global(body:has([data-scene-home])) .volume { top: 100%; bottom: auto; }
+}

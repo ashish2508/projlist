@@ -1,0 +1,114 @@
+.artwork {
+  position: absolute;
+  left: var(--scene-tree-left);
+  top: var(--scene-tree-top);
+  width: var(--scene-tree-width);
+  aspect-ratio: 735 / 1103;
+  pointer-events: none;
+  --wind: 2.6deg;
+}
+.illustration, .navigation, .overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.illustration {
+  mask-image: linear-gradient(to bottom, transparent, black 8px),
+              linear-gradient(to left, transparent, black 14px);
+  mask-composite: intersect;
+}
+.groundMist {
+  position: absolute;
+  inset: auto 0 0;
+  height: 120px;
+  background: linear-gradient(to top, var(--bg), transparent);
+}
+.overlay { overflow: visible; }
+.scale { transform: scale(var(--pendant-scale, 1.19)); }
+.petalLink { pointer-events: auto; cursor: pointer; }
+.target { fill: transparent; }
+.petalLink:focus-visible { outline: none; }
+.focusRing { fill: none; stroke: var(--plum); stroke-width: 2; opacity: 0; }
+.petalLink:focus-visible .focusRing { opacity: 1; }
+.pendant {
+  transform-origin: 0 0;
+  animation: breeze var(--wind-duration) ease-in-out var(--wind-delay) infinite;
+}
+.stem { fill: none; stroke: var(--stem); stroke-width: 1.6; stroke-linecap: round; }
+.joint { fill: var(--stem); }
+.blade { transition: transform 220ms ease; transform-origin: 0 0; filter: drop-shadow(0 1px 1px #70454c16); }
+.skin {
+  stroke: #b65f7b;
+  stroke-width: .75;
+  stroke-opacity: .41;
+}
+.calyx { fill: #8f554e; opacity: .75; }
+.vein {
+  fill: none;
+  stroke: #c0748f;
+  stroke-width: .72;
+  stroke-linecap: round;
+  opacity: .55;
+}
+.stamens { fill: #9f4460; opacity: .78; }
+.stamens path { fill: none; stroke: #ac5271; stroke-width: .68; }
+.label {
+  font: italic 600 18px var(--petal-serif);
+  fill: var(--label);
+  stroke: #f9dfe3;
+  stroke-width: 1.5px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+  user-select: none;
+}
+.petalLink:is(:hover, :focus-visible) .pendant { --wind: 4deg; }
+.petalLink:is(:hover, :focus-visible) .blade { transform: scale(1.04); }
+.petalLink:is(:hover, :focus-visible) .blade { filter: brightness(1.06); }
+.drift { opacity: 0; pointer-events: none; fill: var(--petal-stroke); }
+.petalLink:is(:hover, :focus-visible) .drift { animation: drift 1.25s ease-out var(--wait) both; }
+.pendant[data-falling="true"] .blade { animation: fall .5s ease-in both; pointer-events: none; }
+@keyframes breeze {
+  0%, 100% { transform: rotate(calc(-1 * var(--wind))); }
+  50% { transform: rotate(var(--wind)); }
+}
+@keyframes drift {
+  15% { opacity: .85; }
+  to { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(25deg); }
+}
+@keyframes fall {
+  to { opacity: 0; transform: translate(22px, 85px) rotate(24deg); }
+}
+.chips { display: none; }
+:global(body:has([data-playing="true"])) .artwork { --wind: 2.9deg; }
+
+@media (max-width: 899px) {
+  .navigation { display: none; }
+  .groundMist { height: 90px; background: linear-gradient(to top, var(--bg) 25%, transparent); }
+  .chips {
+    display: flex;
+    gap: 10px;
+    margin-top: 21px;
+    max-width: 470px;
+  }
+  .chips a {
+    display: grid;
+    place-items: center;
+    flex: 1;
+    min-width: 0;
+    min-height: 46px;
+    border: 1px solid color-mix(in srgb, var(--petal-stroke) 55%, transparent);
+    border-radius: 26px 6px 26px 6px;
+    background: linear-gradient(var(--petal-top), var(--petal-bottom));
+    color: var(--label);
+    font: italic 600 17px var(--petal-serif);
+  }
+  .chips a:nth-child(2) { border-radius: 6px 26px 6px 26px; }
+  .chips a:focus-visible { outline: 2px solid var(--plum); outline-offset: 4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pendant, .petalLink:is(:hover, :focus-visible) .drift,
+  .pendant[data-falling="true"] .blade { animation: none; }
+  .blade { transition: none; }
+  .petalLink:is(:hover, :focus-visible) .blade { transform: none; }
+}

@@ -41,7 +41,7 @@ export function buildMailtoHref({
     body: `Name: ${name}\nEmail: ${email}\n\nPurpose:\n${message}`,
   });
 
-  return `mailto:${targetEmail}?${params.toString()}`;
+  return `mailto:${targetEmail}?${params.toString().replace(/\+/g, "%20")}`;
 }
 
 export function getTransporter(env: NodeJS.ProcessEnv = process.env) {

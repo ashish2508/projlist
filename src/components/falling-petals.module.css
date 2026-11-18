@@ -1,0 +1,42 @@
+.field { position: absolute; inset: 0; pointer-events: none; container-type: size; }
+.field i {
+  position: absolute;
+  aspect-ratio: .74;
+  filter: blur(var(--blur));
+  animation: descend var(--duration) var(--delay) linear infinite;
+}
+.field i.settling { animation-name: settle; }
+.field b {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 100% 0 100% 0;
+  background: linear-gradient(135deg, var(--petal-light), var(--petal-deep));
+  animation: turn var(--turn) var(--delay) ease-in-out infinite alternate;
+}
+@keyframes descend {
+  0% { transform: translate(0, 0); opacity: 0; }
+  9% { opacity: .73; }
+  38% { transform: translate(calc(var(--drift) * .29), calc(var(--distance) * .35)); }
+  68% { transform: translate(calc(var(--drift) * .78), calc(var(--distance) * .71)); opacity: .7; }
+  100% { transform: translate(var(--drift), var(--distance)); opacity: 0; }
+}
+@keyframes settle {
+  0% { transform: translate(0, 0); opacity: 0; }
+  8% { opacity: .72; }
+  38% { transform: translate(calc(var(--drift) * .34), calc(var(--distance) * .48)); }
+  72%, 100% { transform: translate(var(--drift), var(--distance)); }
+  75% { opacity: .65; }
+  100% { opacity: 0; }
+}
+@keyframes turn {
+  from { transform: rotate(-34deg) rotateY(8deg); }
+  to { transform: rotate(119deg) rotateY(70deg); }
+}
+:global([data-scene-paused]) .field * { animation-play-state: paused; }
+@media (max-width: 899px) { .field i:nth-child(n+15) { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .field i, .field i.settling, .field b { animation: none; }
+  .field i { display: none; }
+  .field i:nth-child(-n+3) { display: block; opacity: .45; }
+}
