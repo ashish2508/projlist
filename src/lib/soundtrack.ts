@@ -7,7 +7,6 @@ const credits = [
   ["udd-chala.mp3", "Udd Chala", "Taba Chake"],
   ["ik-kudi.mp3", "Ik Kudi", "Arpit Bala & Wolf.Cryman"],
   ["jaanu-naa.mp3", "Jaanu Naa", "Markio Tanaldo"],
-  ["super-shy.mp3", "Super Shy", "NewJeans"],
   ["iro-kousui.mp3", "Iro Kousui", "Yoh Kamiyama"],
 ];
 
